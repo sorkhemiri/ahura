@@ -170,6 +170,11 @@ class Serializer:
                 depth=depth
             )
 
+        #file field resolver
+        for item in file:
+            field_file = getattr(obj, item.attname)
+            data[item.attname] = field_file.url
+
         # simple fields resolver
         for item in simple:
             data[item.attname] = self.value_from_object(item, obj)
