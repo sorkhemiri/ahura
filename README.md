@@ -40,4 +40,4 @@ See also the list of [contributors](https://github.com/sorkhemiri/ahura/graphs/c
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](https://github.com/sorkhemiri/ahura/blob/master/README.md) file for details
+This project is licensed under the MIT License - see the [LICENSE.md](https://github.com/sorkhemiri/ahura/blob/master/LICENSE.md) file for details
