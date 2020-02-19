@@ -8,6 +8,7 @@ class Serializer:
     DATETIME_DEFAULT = "%Y-%m-%dT%H:%M:%S"
     def __init__(
         self,
+        include_statics: bool = False,
         exclude: List[str] = None,
         include: List[str] = None,
         datetime_format: str = DATETIME_DEFAULT,
@@ -16,11 +17,12 @@ class Serializer:
             self.include = include
             self.datetime_format = datetime_format
             self.date_format = date_format
+            self.include_statics = include_statics
     
     def field_validator(self, fields: list) -> list:
         valid_fields = list()
         for field in fields:
-            if not getattr(field, "editable", False):
+            if not getattr(field, "editable", False) and not self.include_statics:
                 continue
             if self.include is not None and field.name not in self.include:
                 continue
