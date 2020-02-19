@@ -35,6 +35,7 @@ Please read [CONTRIBUTING.md](https://github.com/sorkhemiri/ahura/blob/master/CO
 ## Authors
 
 * **Mahdi Sorkhemiri** - *Initial work* - [Sorkhemiri](https://github.com/sorkhemiri)
+* **Mohammad Rabetian** - *Initial work* - [Rabetian](https://github.com/mohammadrabetian)
 
 See also the list of [contributors](https://github.com/sorkhemiri/ahura/graphs/contributors) who participated in this project.
 
