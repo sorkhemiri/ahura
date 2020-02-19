@@ -3,6 +3,7 @@ from typing import List, Optional
 
 from .delta_template import DeltaTemplate
 
+
 class Serializer:
     DATE_DEFAULT = "%Y-%m-%d"
     DATETIME_DEFAULT = "%Y-%m-%dT%H:%M:%S"
@@ -10,12 +11,13 @@ class Serializer:
 
     def __init__(
         self,
+        rename: dict = {},
         include_statics: bool = False,
         exclude: List[str] = None,
         include: List[str] = None,
         datetime_format: str = DATETIME_DEFAULT,
         date_format: str = DATE_DEFAULT,
-        timedelta_format : str = TIMEDELTA_DEFAULT,
+        timedelta_format: str = TIMEDELTA_DEFAULT,
     ):
         self.exclude = exclude
         self.include = include
@@ -23,6 +25,7 @@ class Serializer:
         self.date_format = date_format
         self.timedelta_format = timedelta_format
         self.include_statics = include_statics
+        self.rename = rename
 
     def field_validator(self, fields: list) -> list:
         valid_fields = list()
@@ -116,19 +119,21 @@ class Serializer:
         timedelta_string = template_object.substitute(**data)
         return timedelta_string
 
-
-
     @staticmethod
     def value_from_object(field, obj):
         """Return the value of this field in the given model instance."""
         return getattr(obj, field.attname)
 
-    def field_value_resolver(
-        self,
-        obj,
-        depth: Optional[int] = None,
-        **kwargs
-    ) -> dict:
+    def field_name_selector(self, field):
+        if field.attname in self.rename:
+            alter_name = self.rename[field.attname]
+            if not isinstance(alter_name, str):
+                raise ValueError("Alternative Name Must Be String")
+            return alter_name
+        else:
+            return field.attname
+
+    def field_value_resolver(self, obj, depth: Optional[int] = None, **kwargs) -> dict:
         date_time = kwargs.get("date_time", [])
         date_field = kwargs.get("date_field", [])
         foreign_key = kwargs.get("foreign_key", [])
@@ -145,41 +150,43 @@ class Serializer:
         data = dict()
         # datetime field resolver
         for item in date_time:
-            data[item.attname] = datetime.datetime.strftime(
+            data[self.field_name_selector(item)] = datetime.datetime.strftime(
                 getattr(obj, item.attname), self.datetime_format
             )
         # date field resolver
         for item in date_field:
-            data[item.attname] = datetime.datetime.strftime(
+            data[self.field_name_selector(item)] = datetime.datetime.strftime(
                 getattr(obj, item.attname), self.date_format
             )
         # foreign key resolver
         for item in foreign_key:
-            data[item.attname] = self.single_object_field_resolver(
+            data[self.field_name_selector(item)] = self.single_object_field_resolver(
                 obj=obj, field=item, depth=depth,
             )
         # one to one field resolver
         for item in one_to_one:
-            data[item.attname] = self.single_object_field_resolver(
+            data[self.field_name_selector(item)] = self.single_object_field_resolver(
                 obj=obj, field=item, depth=depth
             )
         # many to many field resolver
         for item in many_to_many:
-            data[item.attname] = self.many_object_field_resolver(
+            data[self.field_name_selector(item)] = self.many_object_field_resolver(
                 obj=obj, field=item, depth=depth
             )
 
         # file field resolver
         for item in file:
             field_file = getattr(obj, item.attname)
-            data[item.attname] = field_file.url
+            data[self.field_name_selector(item)] = field_file.url
 
         for item in timedelta:
-            data[item.attname] = self.timedelta_resolver(obj, field=item)
+            data[self.field_name_selector(item)] = self.timedelta_resolver(
+                obj, field=item
+            )
 
         # simple fields resolver
         for item in simple:
-            data[item.attname] = self.value_from_object(item, obj)
+            data[self.field_name_selector(item)] = self.value_from_object(item, obj)
         return data
 
     def model_serializer(self, obj, depth: Optional[int] = None,) -> dict:
