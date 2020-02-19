@@ -106,15 +106,16 @@ class Serializer:
     def field_value_resolver(
         self,
         obj,
-        date_time: list,
-        date_field: list,
-        foreign_key: list,
-        one_to_one: list,
-        many_to_many: list,
-        file: list,
-        simple: list,
         depth: Optional[int] = None,
+        **kwargs
     ) -> dict:
+        date_time = kwargs.get("date_time", [])
+        date_field = kwargs.get("date_field", [])
+        foreign_key = kwargs.get("foreign_key", [])
+        one_to_one = kwargs.get("one_to_one", [])
+        many_to_many = kwargs.get("many_to_many", [])
+        file = kwargs.get("file", [])
+        simple = kwargs.get("simple", [])
         if depth:
             try:
                 depth = int(depth)
