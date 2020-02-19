@@ -1,10 +1,12 @@
 import datetime
 from typing import List, Optional
 
+from .delta_template import DeltaTemplate
 
 class Serializer:
     DATE_DEFAULT = "%Y-%m-%d"
     DATETIME_DEFAULT = "%Y-%m-%dT%H:%M:%S"
+    TIMEDELTA_DEFAULT = "%dT%H:%M:%S"
 
     def __init__(
         self,
@@ -13,11 +15,13 @@ class Serializer:
         include: List[str] = None,
         datetime_format: str = DATETIME_DEFAULT,
         date_format: str = DATE_DEFAULT,
+        timedelta_format : str = TIMEDELTA_DEFAULT,
     ):
         self.exclude = exclude
         self.include = include
         self.datetime_format = datetime_format
         self.date_format = date_format
+        self.timedelta_format = timedelta_format
         self.include_statics = include_statics
 
     def field_validator(self, fields: list) -> list:
@@ -40,6 +44,7 @@ class Serializer:
         one_to_one_fields = list()
         many_to_many_fields = list()
         file_fields = list()
+        timedelta_fields = list()
         simple_fields = list()
 
         for field in fields:
@@ -56,6 +61,8 @@ class Serializer:
                 many_to_many_fields.append(field)
             elif field_type == "FileField":
                 file_fields.append(field)
+            elif field_type == "DurationField":
+                timedelta_fields.append(field)
             else:
                 simple_fields.append(field)
 
@@ -66,6 +73,7 @@ class Serializer:
         data["one_to_one"] = one_to_one_fields
         data["many_to_many"] = many_to_many_fields
         data["file"] = file_fields
+        data["timedelta"] = timedelta_fields
         data["simple"] = simple_fields
         return data
 
@@ -98,6 +106,18 @@ class Serializer:
                 serializered_model = self.serialize(related_objects)
                 return serializered_model
 
+    def timedelta_resolver(self, obj, field):
+        timedelta_object = getattr(obj, item.attname)
+        data = {"d": timedelta_object.days}
+        data["H"], remaining = divmod(timedelta_object.seconds, 3600)
+        data["M"], data["S"] = divmod(remaining, 60)
+        template_object = DeltaTemplate(self.timedelta_format)
+        # TODO: SOME ERROR HANDELING SHOULD TAKE PALCE AROUND HERE
+        timedelta_string = template_object.substitute(**data)
+        return timedelta_string
+
+
+
     @staticmethod
     def value_from_object(field, obj):
         """Return the value of this field in the given model instance."""
@@ -115,6 +135,7 @@ class Serializer:
         one_to_one = kwargs.get("one_to_one", [])
         many_to_many = kwargs.get("many_to_many", [])
         file = kwargs.get("file", [])
+        timedelta = kwargs.get("timedelta", [])
         simple = kwargs.get("simple", [])
         if depth:
             try:
@@ -152,6 +173,9 @@ class Serializer:
         for item in file:
             field_file = getattr(obj, item.attname)
             data[item.attname] = field_file.url
+
+        for item in timedelta:
+            data[item.attname] = self.timedelta_resolver(obj, field=item)
 
         # simple fields resolver
         for item in simple:
