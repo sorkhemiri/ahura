@@ -25,7 +25,7 @@ then import the Seriliazer and use it like the example below.
 >>> from myapp.models import MyModel
 >>> my_objects = MyModel.objects.all()
 >>> s = Seriliazer(exclude=["password"], date_format="%Y-%m-%d")
->>> data = s.seriliazes(my_objects)
+>>> data = s.serialize(my_objects)
 ```
 
 ## Contributing
