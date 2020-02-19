@@ -1,7 +1,7 @@
 from distutils.core import setup
 setup(
-  name = 'Ahura',
-  packages = ['Ahura'],
+  name = 'ahura',
+  packages = ['ahura'],
   version = '0.1',
   license='MIT',
   description = 'A God Like Serializer For God Like Developers.',
