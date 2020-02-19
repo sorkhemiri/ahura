@@ -2,23 +2,24 @@ import datetime
 from typing import List, Optional
 
 
-
 class Serializer:
     DATE_DEFAULT = "%Y-%m-%d"
     DATETIME_DEFAULT = "%Y-%m-%dT%H:%M:%S"
+
     def __init__(
         self,
         include_statics: bool = False,
         exclude: List[str] = None,
         include: List[str] = None,
         datetime_format: str = DATETIME_DEFAULT,
-        date_format: str = DATE_DEFAULT):
-            self.exclude = exclude
-            self.include = include
-            self.datetime_format = datetime_format
-            self.date_format = date_format
-            self.include_statics = include_statics
-    
+        date_format: str = DATE_DEFAULT,
+    ):
+        self.exclude = exclude
+        self.include = include
+        self.datetime_format = datetime_format
+        self.date_format = date_format
+        self.include_statics = include_statics
+
     def field_validator(self, fields: list) -> list:
         valid_fields = list()
         for field in fields:
@@ -30,7 +31,7 @@ class Serializer:
                 continue
             valid_fields.append(field)
         return valid_fields
-    
+
     @staticmethod
     def fields_classifier(fields: list) -> dict:
         datetime_fields = list()
@@ -67,35 +68,23 @@ class Serializer:
         data["file"] = file_fields
         data["simple"] = simple_fields
         return data
-    
 
-    def single_object_field_resolver(
-        self,
-        obj,
-        field,
-        depth: Optional[int] = None
-    ):
+    def single_object_field_resolver(self, obj, field, depth: Optional[int] = None):
         if getattr(obj, field.attname, False):
             related_object = getattr(obj, field.attname)
             if depth == 0:
                 return related_object.id
             elif depth and depth != 0:
                 serializered_model = self.model_serializer(
-                    related_object,
-                    depth=depth - 1
+                    related_object, depth=depth - 1
                 )
                 return serializered_model
             else:
-                serializered_model = self.model_serializer(
-                    related_object
-                )
+                serializered_model = self.model_serializer(related_object)
                 return serializered_model
-    
+
     def many_object_field_resolver(
-        self,
-        obj,
-        field,
-        depth: Optional[int] = None,
+        self, obj, field, depth: Optional[int] = None,
     ):
         if getattr(obj, field.attname, False):
             related_objects = getattr(obj, field.attname).all()
@@ -103,17 +92,11 @@ class Serializer:
                 related_ids = [item.id for item in related_objects]
                 return related_ids
             elif depth and depth != 0:
-                serializered_model = self.serialize(
-                    related_objects,
-                    depth=depth - 1
-                )
+                serializered_model = self.serialize(related_objects, depth=depth - 1)
                 return serializered_model
             else:
-                serializered_model = self.serialize(
-                    related_objects
-                )
+                serializered_model = self.serialize(related_objects)
                 return serializered_model
-
 
     @staticmethod
     def value_from_object(field, obj):
@@ -151,26 +134,20 @@ class Serializer:
         # foreign key resolver
         for item in foreign_key:
             data[item.attname] = self.single_object_field_resolver(
-                obj=obj,
-                field=item,
-                depth=depth,
+                obj=obj, field=item, depth=depth,
             )
         # one to one field resolver
         for item in one_to_one:
             data[item.attname] = self.single_object_field_resolver(
-                obj=obj,
-                field=item,
-                depth=depth
+                obj=obj, field=item, depth=depth
             )
         # many to many field resolver
         for item in many_to_many:
             data[item.attname] = self.many_object_field_resolver(
-                obj=obj,
-                field=item,
-                depth=depth
+                obj=obj, field=item, depth=depth
             )
 
-        #file field resolver
+        # file field resolver
         for item in file:
             field_file = getattr(obj, item.attname)
             data[item.attname] = field_file.url
@@ -180,26 +157,21 @@ class Serializer:
             data[item.attname] = self.value_from_object(item, obj)
         return data
 
-
-    def model_serializer(
-        self,
-        obj,
-        depth: Optional[int] = None,
-    ) -> dict:
+    def model_serializer(self, obj, depth: Optional[int] = None,) -> dict:
         opts = obj._meta
-        fields = list(opts.concrete_fields) + list(opts.private_fields) + list(opts.many_to_many)
+        fields = (
+            list(opts.concrete_fields)
+            + list(opts.private_fields)
+            + list(opts.many_to_many)
+        )
         fields = self.field_validator(fields)
         classified_fields = self.fields_classifier(fields)
         serialized_model = self.field_value_resolver(
-            obj=obj, depth=depth,**classified_fields
+            obj=obj, depth=depth, **classified_fields
         )
         return serialized_model
-    
-    def serialize(
-        self,
-        objs,
-        depth: Optional[int] = None,
-    ) -> Optional[dict]:
+
+    def serialize(self, objs, depth: Optional[int] = None,) -> Optional[dict]:
         if hasattr(objs, "__iter__") or hasattr(objs, "__getitem__"):
             is_iterable = True
         else:
@@ -211,23 +183,11 @@ class Serializer:
             return None
 
         if not is_iterable:
-            data = self.model_serializer(
-                obj=objs,
-                depth=depth,
-            )
+            data = self.model_serializer(obj=objs, depth=depth,)
             return data
         else:
             data = list()
             for obj in objs:
-                item_dict = self.model_serializer(
-                    obj=obj,
-                    depth=depth,
-                )
+                item_dict = self.model_serializer(obj=obj, depth=depth,)
                 data.append(item_dict)
             return data
-
-
-
-
-
-
