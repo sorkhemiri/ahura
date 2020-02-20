@@ -44,8 +44,8 @@ Please read `CONTRIBUTING.md`_ for details on our code of conduct, and the proce
 
 Authors
 -------
-* **Mahdi Sorkhemiri** * - *Initial work* - `Sorkhemiri`_
-* **Mohammad Rabetian** * - *Initial work* - `Rabetian`_
+* **Mahdi Sorkhemiri**  - *Initial work* - `Sorkhemiri`_
+* **Mohammad Rabetian**  - *Initial work* - `Rabetian`_
 
 See also the list of `contributors`_ who participated in this project.
 
