@@ -2,7 +2,7 @@ Ahura
 =======
 
 **a God like Serializer for God like Developers.**
-Ahura is an Automatic easy to use Django serializer. it coms With Diverse features 
+|Ahura is an Automatic easy to use Django serializer. it coms With diverse features 
 designed to fit in all different occasions. Feel free to contribute in case of 
 detecting issues or if any new idea came to your mind.
 
@@ -37,7 +37,7 @@ below.
 Getting Started
 ---------------
 using ahura is easy as you can see above while it gives you many different options
-to modify your models json with. we are going to go through some of these options below.
+to modify your model's json with. we are going to go through some of these options below.
 
 
 
