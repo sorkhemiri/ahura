@@ -17,7 +17,6 @@ Installing
 ----------
 
 For using Ahura you just need to install it using pip.
-
 .. code-block:: console
     $pip install ahura
 
