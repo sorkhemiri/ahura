@@ -7,7 +7,7 @@ from .delta_template import DeltaTemplate
 class Serializer:
     DATE_DEFAULT = "%Y-%m-%d"
     DATETIME_DEFAULT = "%Y-%m-%dT%H:%M:%S"
-    TIMEDELTA_DEFAULT = "%dT%H:%M:%S"
+    TIMEDELTA_DEFAULT = "%DT%H:%M:%S"
 
     def __init__(
         self,
@@ -111,9 +111,13 @@ class Serializer:
 
     def timedelta_resolver(self, obj, field):
         timedelta_object = getattr(obj, item.attname)
-        data = {"d": timedelta_object.days}
+        data = {}
+        data["y"], remaining = divmod(timedelta_object.days, 365)
+        data["m"], data["d"] = divmod(remaining, 30)
+        data["D"] = timedelta_object.days
         data["H"], remaining = divmod(timedelta_object.seconds, 3600)
         data["M"], data["S"] = divmod(remaining, 60)
+
         template_object = DeltaTemplate(self.timedelta_format)
         # TODO: SOME ERROR HANDELING SHOULD TAKE PALCE AROUND HERE
         timedelta_string = template_object.substitute(**data)
