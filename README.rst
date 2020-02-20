@@ -23,6 +23,7 @@ For using Ahura you just need to install it using pip.
     $pip install ahura
 
 .. code-block:: python
+
     >>> v = Validator({'name': {'type': 'string'}})
     >>> v.validate({'name': 'john doe'})
     True
