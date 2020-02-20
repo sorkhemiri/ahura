@@ -47,6 +47,7 @@ class Serializer:
         one_to_one_fields = list()
         many_to_many_fields = list()
         file_fields = list()
+        image_fields = list()
         timedelta_fields = list()
         simple_fields = list()
 
@@ -64,6 +65,8 @@ class Serializer:
                 many_to_many_fields.append(field)
             elif field_type == "FileField":
                 file_fields.append(field)
+            elif field_type == "ImageField":
+                image_fields.append(field)
             elif field_type == "DurationField":
                 timedelta_fields.append(field)
             else:
@@ -76,6 +79,7 @@ class Serializer:
         data["one_to_one"] = one_to_one_fields
         data["many_to_many"] = many_to_many_fields
         data["file"] = file_fields
+        data["image"] = image_fields
         data["timedelta"] = timedelta_fields
         data["simple"] = simple_fields
         return data
@@ -144,6 +148,7 @@ class Serializer:
         one_to_one = kwargs.get("one_to_one", [])
         many_to_many = kwargs.get("many_to_many", [])
         file = kwargs.get("file", [])
+        image = kwargs.get("image", [])
         timedelta = kwargs.get("timedelta", [])
         simple = kwargs.get("simple", [])
         if depth:
@@ -183,6 +188,12 @@ class Serializer:
             field_file = getattr(obj, item.attname)
             data[self.field_name_selector(item)] = field_file.url
 
+        # image field resolver
+        for item in image:
+            field_image = getattr(obj, item.attname)
+            data[self.field_name_selector(item)] = field_image.url
+
+        # timedelta field resolver
         for item in timedelta:
             data[self.field_name_selector(item)] = self.timedelta_resolver(
                 obj, field=item
