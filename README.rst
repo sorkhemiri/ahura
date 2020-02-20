@@ -22,16 +22,11 @@ For using Ahura you just need to install it using pip.
     
     $pip install ahura
 
-.. code-block:: python
+or clone the project.then import the Seriliazer and use it like the example below.
 
-    >>> v = Validator({'name': {'type': 'string'}})
-    >>> v.validate({'name': 'john doe'})
-    True
-
-or clone the project.
-then import the Seriliazer and use it like the example below.
 
 .. code-block:: python
+
     >>> from ahura import Seriliazer
     >>> from myapp.models import MyModel
     >>> my_objects = MyModel.objects.all()
