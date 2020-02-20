@@ -1,4 +1,6 @@
-# Ahura
+# Ahura |latest-version|
+=========================
+|build-status| |python-support| |black|
 
 a God like Serializer for God like Developers.
 
