@@ -1,12 +1,12 @@
 from distutils.core import setup
 
-with open("README.rst", "r") as f:
-    long_description = f.read()
+with open("README.rst", "r") as fl:
+    long_description = fl.read()
 
 setup(
   name = 'ahura',
   packages = ['ahura'],
-  version = '0.1.3',
+  version = '0.1.4',
   license='MIT',
   description = 'A God Like Serializer For God Like Developers.',
   long_description=long_description,
