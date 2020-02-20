@@ -1,10 +1,15 @@
 from distutils.core import setup
+
+with open("README.md", "r") as f:
+    long_description = f.read()
+
 setup(
   name = 'ahura',
   packages = ['ahura'],
   version = '0.1.2',
   license='MIT',
   description = 'A God Like Serializer For God Like Developers.',
+  long_description=long_description,
   author = 'Mahdi Sorkhemiri',
   author_email = 'sorkhemiri@gmail.com',
   url = 'https://github.com/sorkhemiri/ahura',
