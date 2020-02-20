@@ -2,8 +2,7 @@ Ahura
 =======
 
 **a God like Serializer for God like Developers.**
- |  Ahura is an Automatic easy to use Django serializer.it coms With diverse features 
-designed to fit in all different occasions. Feel free to
+ | Ahura is an Automatic easy to use Django serializer.it coms With diverse features designed to fit in all different occasions. Feel free to
  contribute in case of detecting issues or if any new idea came
  to your mind.
 
