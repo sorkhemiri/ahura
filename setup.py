@@ -6,7 +6,7 @@ with open("README.rst", "r") as fl:
 setup(
   name = 'ahura',
   packages = ['ahura'],
-  version = '0.1.7',
+  version = '0.1.8',
   license='MIT',
   description = 'A God Like Serializer For God Like Developers.',
   long_description=long_description,
@@ -15,9 +15,7 @@ setup(
   url = 'https://github.com/sorkhemiri/ahura',
   download_url = 'https://github.com/sorkhemiri/ahura/archive/0.1.tar.gz',
   keywords = ['python', 'django', 'serializer', 'json', 'model', 'orm'],
-  install_requires=[
-          'django',
-      ],
+  install_requires=[],
   classifiers=[
     'Development Status :: 4 - Beta',
     'Intended Audience :: Developers',
