@@ -2,13 +2,13 @@ Ahura
 =======
 
 **a God like Serializer for God like Developers.**
- | Ahura is an Automatic easy to use Django serializer.it coms With diverse features designed to fit in all different occasions. Feel free to contribute in case of detecting issues or if any new idea came to your mind.
+ | Ahura is an Automatic easy to use Django serializer. it comes With diverse features designed to fit in all different occasions. Feel free to contribute in case of detecting issues or if any new ideas came to your mind.
 
 
 Prerequisites
 -------------
 
-Ahura is a Django Model Seriliazer for now so you must have django installed and use Django ORM. 
+Ahura is a Django model serializer for now, so you must have Django installed and use Django ORM. 
 
 Installing
 ----------
@@ -19,23 +19,25 @@ For using Ahura you just need to install it using pip.
     
     $pip install ahura
 
-or clone the project.then import the Seriliazer and use it like the example 
+or clone the project. then import the Serializer and use it like the example 
 below.
 
 
 .. code-block:: python
 
-    >>> from ahura import Seriliazer
+    >>> from ahura import Serializer
     >>> from myapp.models import MyModel
     >>> my_objects = MyModel.objects.all()
-    >>> s = Seriliazer(exclude=["password"], date_format="%Y-%m-%d")
+    >>> s = Serializer(exclude=["password"], date_format="%Y-%m-%d")
     >>> data = s.serialize(my_objects)
 
 
 Getting Started
 ---------------
 using ahura is easy as you can see above while it gives you many different options
-to modify your model's json with. we are going to go through some of these options below.
+to modify your model's json. let's go through some of these options.
+
+*this  part is not complete but we will add the documention very soon*
 
 
 
