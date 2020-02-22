@@ -85,8 +85,8 @@ class Serializer:
         return data
 
     def single_object_field_resolver(self, obj, field, depth: Optional[int] = None):
-        if getattr(obj, field.attname, False):
-            related_object = getattr(obj, field.attname)
+        if getattr(obj, field.name, False):
+            related_object = getattr(obj, field.name)
             if depth == 0:
                 return related_object.id
             elif depth and depth != 0:
@@ -101,8 +101,8 @@ class Serializer:
     def many_object_field_resolver(
         self, obj, field, depth: Optional[int] = None,
     ):
-        if getattr(obj, field.attname, False):
-            related_objects = getattr(obj, field.attname).all()
+        if getattr(obj, field.name, False):
+            related_objects = getattr(obj, field.name).all()
             if depth == 0:
                 related_ids = [item.id for item in related_objects]
                 return related_ids
@@ -114,7 +114,7 @@ class Serializer:
                 return serializered_model
 
     def timedelta_resolver(self, obj, field):
-        timedelta_object = getattr(obj, field.attname)
+        timedelta_object = getattr(obj, field.name)
         data = {}
         data["y"], remaining = divmod(timedelta_object.days, 365)
         data["m"], data["d"] = divmod(remaining, 30)
@@ -130,16 +130,16 @@ class Serializer:
     @staticmethod
     def value_from_object(field, obj):
         """Return the value of this field in the given model instance."""
-        return getattr(obj, field.attname)
+        return getattr(obj, field.name)
 
     def field_name_selector(self, field):
-        if field.attname in self.rename:
-            alter_name = self.rename[field.attname]
+        if field.name in self.rename:
+            alter_name = self.rename[field.name]
             if not isinstance(alter_name, str):
                 raise ValueError("Alternative Name Must Be String")
             return alter_name
         else:
-            return field.attname
+            return field.name
 
     def field_value_resolver(self, obj, depth: Optional[int] = None, **kwargs) -> dict:
         date_time = kwargs.get("date_time", [])
@@ -160,12 +160,12 @@ class Serializer:
         # datetime field resolver
         for item in date_time:
             data[self.field_name_selector(item)] = datetime.datetime.strftime(
-                getattr(obj, item.attname), self.datetime_format
+                getattr(obj, item.name), self.datetime_format
             )
         # date field resolver
         for item in date_field:
             data[self.field_name_selector(item)] = datetime.datetime.strftime(
-                getattr(obj, item.attname), self.date_format
+                getattr(obj, item.name), self.date_format
             )
         # foreign key resolver
         for item in foreign_key:
@@ -185,12 +185,12 @@ class Serializer:
 
         # file field resolver
         for item in file:
-            field_file = getattr(obj, item.attname)
+            field_file = getattr(obj, item.name)
             data[self.field_name_selector(item)] = field_file.url
 
         # image field resolver
         for item in image:
-            field_image = getattr(obj, item.attname)
+            field_image = getattr(obj, item.name)
             data[self.field_name_selector(item)] = field_image.url
 
         # timedelta field resolver
