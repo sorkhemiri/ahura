@@ -233,8 +233,13 @@ class Serializer:
             data = self.model_serializer(obj=objs, depth=depth,)
             return data
         else:
-            data = list()
-            for obj in objs:
-                item_dict = self.model_serializer(obj=obj, depth=depth,)
-                data.append(item_dict)
-            return data
+            try:
+                data = list()
+                for obj in objs:
+                    item_dict = self.model_serializer(obj=obj, depth=depth,)
+                    data.append(item_dict)
+                return data
+            except TypeError:
+                is_iterable = False
+                data = self.model_serializer(obj=objs, depth=depth,)
+                return data
