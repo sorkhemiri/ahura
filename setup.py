@@ -6,7 +6,7 @@ with open("README.rst", "r") as fl:
 setup(
   name = 'ahura',
   packages = ['ahura'],
-  version = '0.1.10',
+  version = '0.1.11',
   license='MIT',
   description = 'A God Like Serializer For God Like Developers.',
   long_description=long_description,
