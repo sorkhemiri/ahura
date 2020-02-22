@@ -114,7 +114,7 @@ class Serializer:
                 return serializered_model
 
     def timedelta_resolver(self, obj, field):
-        timedelta_object = getattr(obj, item.attname)
+        timedelta_object = getattr(obj, field.attname)
         data = {}
         data["y"], remaining = divmod(timedelta_object.days, 365)
         data["m"], data["d"] = divmod(remaining, 30)
