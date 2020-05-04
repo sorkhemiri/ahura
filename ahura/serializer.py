@@ -159,14 +159,20 @@ class Serializer:
         data = dict()
         # datetime field resolver
         for item in date_time:
-            data[self.field_name_selector(item)] = datetime.datetime.strftime(
-                getattr(obj, item.name), self.datetime_format
-            )
+            if not getattr(obj, item.name):
+                data[self.field_name_selector(item)] = None
+            else:
+                data[self.field_name_selector(item)] = datetime.datetime.strftime(
+                    getattr(obj, item.name), self.datetime_format
+                )
         # date field resolver
         for item in date_field:
-            data[self.field_name_selector(item)] = datetime.datetime.strftime(
-                getattr(obj, item.name), self.date_format
-            )
+            if not getattr(obj, item.name):
+                data[self.field_name_selector(item)] = None
+            else:
+                data[self.field_name_selector(item)] = datetime.datetime.strftime(
+                    getattr(obj, item.name), self.date_format
+                )
         # foreign key resolver
         for item in foreign_key:
             data[self.field_name_selector(item)] = self.single_object_field_resolver(
